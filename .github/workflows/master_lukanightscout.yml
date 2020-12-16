@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - lukanightscout
+name: Build and deploy WAR app to Azure Web App - lukanightscout
 
 on:
   push:
@@ -15,21 +15,18 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
+    - name: Set up Java version
+      uses: actions/setup-java@v1
       with:
-        dotnet-version: '5.0.x'
+        java-version: '8'
 
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
-
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+    - name: Build with Maven
+      run: mvn clean install
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'lukanightscout'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_af04ebe4937646178d4d595d74bf6bcc }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_1c88d4e0ba52482d921d77f4acde7d82 }}
+        package: '${{ github.workspace }}/target/*.war'
